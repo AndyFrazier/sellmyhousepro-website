@@ -66,10 +66,10 @@ export default function App() {
 
       {/* ── Navbar ─────────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
-        <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-14 w-auto object-contain" />
+          <div className="flex items-center">
+            <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-[72px] w-auto object-contain" />
           </div>
 
           {/* Desktop links */}
@@ -131,7 +131,7 @@ export default function App() {
       </header>
 
       {/* ── Hero ───────────────────────────────────────────────────── */}
-      <section id="hero" className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-[#1c466e] via-[#2E6DA4] to-[#5590c8] pt-16">
+      <section id="hero" className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-[#1c466e] via-[#2E6DA4] to-[#5590c8] pt-20">
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-white/5" />
           <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-white/5" />
@@ -141,12 +141,6 @@ export default function App() {
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
           {/* Left: Copy */}
           <div className="text-white">
-            <img
-              src="/SMHP_logo.png"
-              alt="SellMyHousePro"
-              className="mx-auto md:mx-0 mb-8 w-auto object-contain"
-              style={{ height: '220px', mixBlendMode: 'multiply', background: 'transparent' }}
-            />
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-white/90 mb-8">
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               Now accepting waitlist signups
