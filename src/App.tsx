@@ -27,6 +27,32 @@ const features = [
   { icon: Bot,           title: 'AI Assistant',             desc: 'Your intelligent companion for the whole journey — powered by Claude' },
 ];
 
+const featureTooltips: Record<string, string> = {
+  'Sale Planner': 'A full checklist in English and your local language, so you can work alongside local tradespeople, notaires and agents without anything getting lost in translation.',
+  'Job Manager': 'Assign every job to a worker or tradesman, track materials with a built-in shopping list, log timesheets and store quotations — all in one place.',
+  'Sale Inventory': 'Built-in camera mode lets you photograph each item, add a description and value, then export everything to a spreadsheet for buyer agreement or a professional PDF for the notaire.',
+  'AI Document Translation': 'Complete document translation in one pass — no copy-pasting into Google Translate. Load your French or Spanish documents and our AI handles the rest, accurately and instantly.',
+  'Document Vault': 'Store a copy of every document securely in the cloud, accessible from any device, anywhere in the world, at any time.',
+  'Buyer Handover Pack': 'Build your handover pack as you go — scan instruction manuals, collect warranties and utility info, and give your buyer everything they need from day one.',
+  'AI Assistant': 'Ask our AI about any clause or issue in any document or survey report. Get a clear, plain-English explanation with no legal jargon.',
+};
+
+function Tooltip({ text, children }: { text: string; children: React.ReactNode }) {
+  return (
+    <div className="relative group">
+      {children}
+      <div
+        className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50"
+      >
+        <div className="bg-[#1a2f4a] text-white text-xs leading-relaxed rounded-xl px-4 py-3 shadow-xl">
+          {text}
+        </div>
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-r-[7px] border-t-[7px] border-l-transparent border-r-transparent border-t-[#1a2f4a]" />
+      </div>
+    </div>
+  );
+}
+
 const navLinks = [
   { label: 'Features', href: '#features' },
   { label: 'Pricing',  href: '#pricing'  },
@@ -68,9 +94,11 @@ export default function App() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center">
-            <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-[72px] w-auto object-contain" />
-          </div>
+          <Tooltip text="SellMyHousePro works as a full web platform and as a mobile app — including offline mode when you have no internet connection.">
+            <div className="flex items-center">
+              <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-[72px] w-auto object-contain" />
+            </div>
+          </Tooltip>
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-1">
@@ -378,20 +406,28 @@ export default function App() {
           return (
             <div key={rowIdx} className={`${bg} py-6 px-4 sm:px-6`}>
               <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {row.map(({ icon: Icon, title, desc }) => (
-                  <div
-                    key={title}
-                    className="flex flex-col gap-3 p-5 rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-[#2E6DA4]/30 transition-all duration-200 cursor-default"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-5 h-5 text-[#2E6DA4]" />
+                {row.map(({ icon: Icon, title, desc }) => {
+                  const tooltipText = featureTooltips[title];
+                  const card = (
+                    <div
+                      key={title}
+                      className="flex flex-col gap-3 p-5 rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-[#2E6DA4]/30 transition-all duration-200 cursor-default h-full"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-5 h-5 text-[#2E6DA4]" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm mb-1">{title}</p>
+                        <p className="text-gray-500 text-xs leading-relaxed">{desc}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm mb-1">{title}</p>
-                      <p className="text-gray-500 text-xs leading-relaxed">{desc}</p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                  return tooltipText ? (
+                    <Tooltip key={title} text={tooltipText}>{card}</Tooltip>
+                  ) : (
+                    <div key={title}>{card}</div>
+                  );
+                })}
               </div>
             </div>
           );
