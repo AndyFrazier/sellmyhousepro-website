@@ -183,11 +183,15 @@ export default function App() {
               Now accepting waitlist signups
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 text-white">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 text-white">
               Selling your home{' '}
               <span className="text-blue-200">made simple</span>{' '}
               — wherever you are.
             </h1>
+
+            <p className="text-lg italic text-blue-200/80 mb-6">
+              Selling your home is a big deal. Plan it like one.
+            </p>
 
             <p className="text-lg text-blue-100 leading-relaxed mb-10 max-w-lg">
               SellMyHousePro gives you a proven project management framework for every stage of your sale — whether you're using an agent or going it alone. Built by someone who sold their house in France and learned everything the hard way.
@@ -243,48 +247,13 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right: Dashboard mockup */}
+          {/* Right: Dashboard screenshot */}
           <div className="hidden lg:block">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 shadow-2xl space-y-5">
-              <div className="flex items-center justify-between">
-                <span className="text-white font-semibold text-sm">My Sale — 12 Rue des Lilas</span>
-                <span className="bg-green-400/20 text-green-300 text-xs font-medium px-3 py-1 rounded-full">Active</span>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs text-blue-200 mb-2">
-                  <span>Overall progress</span><span>64%</span>
-                </div>
-                <div className="w-full bg-white/20 rounded-full h-2">
-                  <div className="bg-green-400 h-2 rounded-full" style={{ width: '64%' }} />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { label: 'Documents', value: '12 / 18',    bg: 'bg-blue-400/20 text-blue-100'  },
-                  { label: 'Open Tasks', value: '4 due soon', bg: 'bg-amber-400/20 text-amber-200' },
-                  { label: 'Viewings',  value: '7 scheduled', bg: 'bg-green-400/20 text-green-200' },
-                  { label: 'Best Offer', value: '€385,000',   bg: 'bg-white/10 text-blue-100'     },
-                ].map(item => (
-                  <div key={item.label} className={`${item.bg} rounded-xl p-3`}>
-                    <div className="text-[11px] opacity-70 mb-1">{item.label}</div>
-                    <div className="font-semibold text-sm">{item.value}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="border-t border-white/10 pt-4 space-y-2.5">
-                <div className="text-xs text-blue-200 font-medium">Recent activity</div>
-                {[
-                  { text: 'Notaire confirmed appointment', time: '2h ago'    },
-                  { text: 'Offer received — €385,000',    time: 'Yesterday'  },
-                  { text: 'EPC certificate uploaded',      time: '2 days ago' },
-                ].map(item => (
-                  <div key={item.text} className="flex items-center justify-between text-xs">
-                    <span className="text-blue-100">{item.text}</span>
-                    <span className="text-blue-300/70 ml-4 whitespace-nowrap">{item.time}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <img
+              src="/image.png"
+              alt="SellMyHousePro dashboard showing Planning, Marketing, Legal, Documents and Logistics modules"
+              className="w-full rounded-2xl border border-white/20 shadow-2xl"
+            />
           </div>
         </div>
       </section>
@@ -532,7 +501,7 @@ export default function App() {
               <div className="flex items-center gap-2 mb-4">
                 <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-12 w-auto object-contain" />
               </div>
-              <p className="text-blue-200/70 text-sm leading-relaxed">Selling your home made simple.</p>
+              <p className="text-blue-200/70 text-sm leading-relaxed italic">Selling your home is a big deal. Plan it like one.</p>
             </div>
 
             {/* Links */}
