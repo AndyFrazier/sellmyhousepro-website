@@ -411,7 +411,7 @@ export default function App() {
               </ul>
               <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
                 className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-75"
-                style={ border: '1px solid rgba(255,255,255,0.2)', color: th.cream, background: 'transparent' }>
+                style={{ border: '1px solid rgba(255,255,255,0.2)', color: th.cream, background: 'transparent' }}>
                 Get started free
               </a>
             </div>
@@ -450,7 +450,7 @@ export default function App() {
                 </ul>
                 <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
                   className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-85"
-                  style={ background: th.terracotta, color: th.cream }>
+                  style={{ background: th.terracotta, color: th.cream }}>
                   Start free trial
                 </a>
               </div>
@@ -493,7 +493,7 @@ export default function App() {
                 </ul>
                 <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
                   className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-85"
-                  style={ background: th.olive, color: th.cream }>
+                  style={{ background: th.olive, color: th.cream }}>
                   Start free trial
                 </a>
               </div>
