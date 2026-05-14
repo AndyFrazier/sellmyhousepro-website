@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { joinWaitlist } from './lib/supabase';
 import {
   Menu, X, ArrowRight, CheckCircle,
@@ -118,6 +118,7 @@ function Eyebrow({ label, light = false }: { label: string; light?: boolean }) {
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
   const [email, setEmail]       = useState('');
   const [heroState, setHeroState] = useState<'idle'|'loading'|'success'|'duplicate'|'error'>('idle');
 
@@ -135,6 +136,10 @@ export default function App() {
     e.preventDefault();
     setMenuOpen(false);
     smoothScroll(href);
+    // If going to hero, focus the email input so users know what to do
+    if (href === '#hero') {
+      setTimeout(() => emailInputRef.current?.focus(), 600);
+    }
   };
 
   return (
@@ -241,6 +246,7 @@ export default function App() {
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md">
                 <input
+                  ref={emailInputRef}
                   type="email" required value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="Enter your email address"
