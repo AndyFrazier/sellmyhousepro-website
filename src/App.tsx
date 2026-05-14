@@ -575,7 +575,6 @@ export default function App() {
           {/* Side-by-side: property photo + listing screenshot */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
             <div className="flex flex-col">
-              {/* ⚠️  IMAGE NOTE: rename 27d1256c6b758d6e40641bb8789b5c73.jpg → house-shutters.jpg in /public */}
               <img
                 src="/house-shutters.jpg"
                 alt="French farmhouse with green shutters"
@@ -624,7 +623,6 @@ export default function App() {
             {/* Photo — first on mobile, second on desktop */}
             <div className="relative order-2 lg:order-1 flex justify-center">
               <div className="relative inline-block">
-                {/* ⚠️  IMAGE NOTE: rename DSC06209.jpg → couple.jpg in /public */}
                 <img
                   src="/couple.jpg"
                   alt="Couple in a sun-dappled olive garden in France"
