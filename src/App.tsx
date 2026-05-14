@@ -409,10 +409,11 @@ export default function App() {
                   </li>
                 ))}
               </ul>
-              <button className="w-full py-3 text-sm font-semibold transition-opacity hover:opacity-75"
-                style={{ border: '1px solid rgba(255,255,255,0.2)', color: th.cream, background: 'transparent' }}>
+              <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
+                className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-75"
+                style={ border: '1px solid rgba(255,255,255,0.2)', color: th.cream, background: 'transparent' }>
                 Get started free
-              </button>
+              </a>
             </div>
 
             {/* Essentials */}
@@ -447,10 +448,11 @@ export default function App() {
                     </li>
                   ))}
                 </ul>
-                <button className="w-full py-3 text-sm font-semibold transition-opacity hover:opacity-85"
-                  style={{ background: th.terracotta, color: th.cream }}>
+                <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
+                  className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-85"
+                  style={ background: th.terracotta, color: th.cream }>
                   Start free trial
-                </button>
+                </a>
               </div>
             </div>
 
@@ -489,10 +491,11 @@ export default function App() {
                     </li>
                   ))}
                 </ul>
-                <button className="w-full py-3 text-sm font-semibold transition-opacity hover:opacity-85"
-                  style={{ background: th.olive, color: th.cream }}>
+                <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
+                  className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-85"
+                  style={ background: th.olive, color: th.cream }>
                   Start free trial
-                </button>
+                </a>
               </div>
             </div>
 
