@@ -8,6 +8,30 @@ import {
   Handshake, SquareUser as UserSquare2, Send,
 } from 'lucide-react';
 
+// ── Google Fonts ─────────────────────────────────────────────────────────────
+if (typeof document !== 'undefined' && !document.getElementById('smhp-gfonts')) {
+  const l = document.createElement('link');
+  l.id = 'smhp-gfonts';
+  l.rel = 'stylesheet';
+  l.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap';
+  document.head.appendChild(l);
+}
+
+// ── Colour palette ───────────────────────────────────────────────────────────
+const th = {
+  cream:      '#F7F2EA',
+  stone:      '#EDE8DF',
+  terracotta: '#C4614A',
+  tcLight:    '#E8896E',
+  olive:      '#3D5229',
+  oliveMid:   '#5A7A3E',
+  charcoal:   '#2A2018',
+  gold:       '#C49A3A',
+  muted:      '#7A6E60',
+  deepOlive:  '#243518',
+};
+
+// ── Feature data ─────────────────────────────────────────────────────────────
 const features = [
   { icon: ClipboardList, title: 'Sale Planner',             desc: 'Master checklist and milestones for your entire sale' },
   { icon: Wrench,        title: 'Job Manager',              desc: 'Every repair and task, assigned, costed and tracked' },
@@ -46,22 +70,6 @@ const featureTooltips: Record<string, string> = {
   'AI Assistant': 'Ask our AI about any clause or issue in any document or survey report. Get a clear, plain-English explanation with no legal jargon.',
 };
 
-function Tooltip({ text, children }: { text: string; children: React.ReactNode }) {
-  return (
-    <div className="relative group">
-      {children}
-      <div
-        className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50"
-      >
-        <div className="bg-[#1a2f4a] text-white text-xs leading-relaxed rounded-xl px-4 py-3 shadow-xl">
-          {text}
-        </div>
-        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-r-[7px] border-t-[7px] border-l-transparent border-r-transparent border-t-[#1a2f4a]" />
-      </div>
-    </div>
-  );
-}
-
 const navLinks = [
   { label: 'Features', href: '#features' },
   { label: 'Pricing',  href: '#pricing'  },
@@ -70,15 +78,48 @@ const navLinks = [
 ];
 
 function smoothScroll(href: string) {
-  const id = href.replace('#', '');
-  const el = document.getElementById(id);
+  const el = document.getElementById(href.replace('#', ''));
   if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
+// ── Tooltip ──────────────────────────────────────────────────────────────────
+function Tooltip({ text, children }: { text: string; children: React.ReactNode }) {
+  return (
+    <div className="relative group">
+      {children}
+      <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
+        <div className="rounded-sm px-4 py-3 shadow-xl text-xs leading-relaxed"
+          style={{ background: th.charcoal, color: th.cream }}>
+          {text}
+        </div>
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0
+          border-l-[7px] border-r-[7px] border-t-[7px]
+          border-l-transparent border-r-transparent"
+          style={{ borderTopColor: th.charcoal }} />
+      </div>
+    </div>
+  );
+}
+
+// ── Eyebrow helper ───────────────────────────────────────────────────────────
+function Eyebrow({ label, light = false }: { label: string; light?: boolean }) {
+  return (
+    <div className="flex items-center gap-4 mb-5">
+      <div className="h-px w-12" style={{ background: light ? th.gold : th.terracotta }} />
+      <p className="text-xs uppercase tracking-widest font-semibold"
+        style={{ color: light ? th.gold : th.terracotta }}>
+        {label}
+      </p>
+      <div className="h-px w-12" style={{ background: light ? th.gold : th.terracotta }} />
+    </div>
+  );
+}
+
+// ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [email, setEmail]   = useState('');
-  const [heroState, setHeroState] = useState<'idle' | 'loading' | 'success' | 'duplicate' | 'error'>('idle');
+  const [email, setEmail]       = useState('');
+  const [heroState, setHeroState] = useState<'idle'|'loading'|'success'|'duplicate'|'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,214 +138,293 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-screen" style={{ fontFamily: "'Lato', sans-serif", background: th.cream, color: th.charcoal }}>
 
-      {/* ── Navbar ─────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
-        <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-          {/* Logo */}
-          <Tooltip text="SellMyHousePro works as a full web platform and as a mobile app — including offline mode when you have no internet connection.">
-            <div className="flex items-center">
-              <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-[72px] w-auto object-contain" />
-            </div>
-          </Tooltip>
+      {/* ════════════════════════════════════════════════════════════
+          NAVBAR
+      ════════════════════════════════════════════════════════════ */}
+      <header className="fixed top-0 left-0 right-0 z-50 shadow-sm"
+        style={{ background: th.cream, borderBottom: `1px solid ${th.stone}` }}>
+        <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-16 w-auto object-contain" />
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-10">
             {navLinks.map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                onClick={e => handleNavClick(e, href)}
-                className="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:text-gray-900 hover:bg-gray-50 transition-colors"
-              >
+              <a key={label} href={href} onClick={e => handleNavClick(e, href)}
+                className="text-xs uppercase tracking-widest hover:opacity-50 transition-opacity"
+                style={{ color: th.charcoal }}>
                 {label}
               </a>
             ))}
           </div>
 
-          {/* Desktop CTA — scrolls to hero form */}
-          <a
-            href="#hero"
-            onClick={e => handleNavClick(e, '#hero')}
-            className="hidden md:inline-flex items-center gap-2 px-5 py-2 bg-[#2E6DA4] text-white text-sm font-semibold rounded-lg hover:bg-[#245989] transition-colors shadow-sm"
-          >
+          <a href="#hero" onClick={e => handleNavClick(e, '#hero')}
+            className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-85"
+            style={{ background: th.terracotta, color: th.cream }}>
             Join Waitlist
           </a>
 
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-          >
+          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2" style={{ color: th.charcoal }}>
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </nav>
 
-        {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-1 shadow-lg">
+          <div className="md:hidden px-6 py-4 space-y-3"
+            style={{ background: th.cream, borderTop: `1px solid ${th.stone}` }}>
             {navLinks.map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                onClick={e => handleNavClick(e, href)}
-                className="block px-4 py-3 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-              >
+              <a key={label} href={href} onClick={e => handleNavClick(e, href)}
+                className="block text-sm uppercase tracking-widest py-2" style={{ color: th.charcoal }}>
                 {label}
               </a>
             ))}
-            <div className="pt-2">
-              <a
-                href="#hero"
-                onClick={e => handleNavClick(e, '#hero')}
-                className="block text-center px-5 py-3 bg-[#2E6DA4] text-white text-sm font-semibold rounded-lg hover:bg-[#245989] transition-colors"
-              >
-                Join Waitlist
-              </a>
-            </div>
+            <a href="#hero" onClick={e => handleNavClick(e, '#hero')}
+              className="block text-center py-3 text-sm font-semibold mt-2"
+              style={{ background: th.terracotta, color: th.cream }}>
+              Join Waitlist
+            </a>
           </div>
         )}
       </header>
 
-      {/* ── Hero ───────────────────────────────────────────────────── */}
-      <section id="hero" className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-[#1c466e] via-[#2E6DA4] to-[#5590c8] pt-20">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-white/5" />
-          <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-white/5" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full border border-white/5" />
-        </div>
+      {/* ════════════════════════════════════════════════════════════
+          HERO — Split: warm copy left / full-bleed farmhouse right
+      ════════════════════════════════════════════════════════════ */}
+      <section id="hero" className="min-h-screen flex pt-20" style={{ background: th.cream }}>
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
-          {/* Left: Copy */}
-          <div className="text-white">
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-white/90 mb-8">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              Now accepting waitlist signups
+        {/* Left — copy */}
+        <div className="flex items-center w-full lg:w-[52%] px-8 lg:px-16 xl:px-24 py-20">
+          <div className="max-w-xl w-full">
+
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-px w-10" style={{ background: th.terracotta }} />
+              <span className="flex items-center gap-2 text-xs uppercase tracking-widest font-semibold"
+                style={{ color: th.terracotta }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse inline-block" />
+                Now accepting waitlist signups
+              </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 text-white">
-              Selling your home{' '}
-              <span className="text-blue-200">made simple</span>{' '}
-              — wherever you are.
+            {/* Headline */}
+            <h1 className="text-5xl lg:text-6xl xl:text-[4.25rem] font-normal leading-[1.06] mb-5"
+              style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
+              Selling your home,<br />
+              <em style={{ color: th.terracotta }}>made simple.</em>
             </h1>
 
-            <p className="text-lg italic text-blue-200/80 mb-6">
+            <p className="text-base italic mb-3" style={{ color: th.muted }}>
               Selling your home is a big deal. Plan it like one.
             </p>
 
-            <p className="text-lg text-blue-100 leading-relaxed mb-10 max-w-lg">
-              SellMyHousePro gives you a proven project management framework for every stage of your sale — whether you're using an agent or going it alone. Built by someone who sold their house in France and learned everything the hard way.
+            <p className="text-base leading-relaxed mb-10 max-w-lg" style={{ color: th.muted }}>
+              SellMyHousePro gives you a proven project-management framework for every stage of your sale — whether you're using an agent or going it alone. Built by someone who sold their house in France and learned everything the hard way.
             </p>
 
+            {/* Waitlist form / states */}
             {heroState === 'success' ? (
-              <div className="flex items-center gap-3 p-4 bg-green-500/20 border border-green-400/30 rounded-xl text-green-200 max-w-md">
-                <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                <span className="font-medium">You're on the list! We'll be in touch soon.</span>
+              <div className="flex items-center gap-3 p-4"
+                style={{ background: '#EAF2E8', border: '1px solid #8FBD7A' }}>
+                <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: th.olive }} />
+                <span className="font-semibold text-sm" style={{ color: th.olive }}>
+                  You're on the list! We'll be in touch soon.
+                </span>
               </div>
             ) : heroState === 'duplicate' ? (
-              <div className="flex items-center gap-3 p-4 bg-blue-500/20 border border-blue-400/30 rounded-xl text-blue-200 max-w-md">
-                <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                <span className="font-medium">You're already on the list!</span>
+              <div className="flex items-center gap-3 p-4" style={{ background: th.stone }}>
+                <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: th.olive }} />
+                <span className="font-semibold text-sm" style={{ color: th.olive }}>
+                  You're already on the list!
+                </span>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md">
                 <input
-                  type="email"
-                  required
-                  value={email}
+                  type="email" required value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="Enter your email address"
-                  className="flex-1 px-4 py-3 bg-white text-gray-900 placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm shadow-sm"
+                  className="flex-1 px-4 py-3 text-sm focus:outline-none"
+                  style={{ background: 'white', border: `1px solid ${th.stone}`, color: th.charcoal }}
                 />
-                <button
-                  type="submit"
-                  disabled={heroState === 'loading'}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#2E6DA4] font-semibold text-sm rounded-lg hover:bg-blue-50 transition-colors shadow-sm whitespace-nowrap disabled:opacity-60"
-                >
-                  {heroState === 'loading' ? 'Joining...' : <><span>Join Waitlist</span><ArrowRight className="w-4 h-4" /></>}
+                <button type="submit" disabled={heroState === 'loading'}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold whitespace-nowrap transition-opacity hover:opacity-85 disabled:opacity-60"
+                  style={{ background: th.terracotta, color: th.cream }}>
+                  {heroState === 'loading'
+                    ? 'Joining…'
+                    : <><span>Join Waitlist</span><ArrowRight className="w-4 h-4" /></>}
                 </button>
                 {heroState === 'error' && (
-                  <p className="text-red-300 text-xs mt-1">Something went wrong. Please try again.</p>
+                  <p className="text-xs mt-1" style={{ color: th.terracotta }}>
+                    Something went wrong. Please try again.
+                  </p>
                 )}
               </form>
             )}
 
-            <p className="mt-4 text-blue-200/70 text-xs">Free to join. No card required. Launching soon.</p>
-            <p className="mt-2 text-blue-200/60 text-xs">Designed for French, Spanish, UK and international property sales</p>
+            <p className="mt-4 text-xs" style={{ color: th.muted }}>Free to join. No card required. Launching soon.</p>
+            <p className="mt-1 text-xs" style={{ color: th.muted }}>Designed for French, Spanish, UK and international property sales</p>
 
-            <div className="flex items-center gap-8 mt-12 pt-8 border-t border-white/10">
+            {/* Stats */}
+            <div className="flex items-center gap-10 mt-14 pt-8"
+              style={{ borderTop: `1px solid ${th.stone}` }}>
               {[
                 { value: '16',   label: 'Feature modules' },
-                { value: '2',    label: 'Simple plans'    },
-                { value: '€225', label: 'Max total cost'  },
+                { value: '2',    label: 'Simple plans' },
+                { value: '€225', label: 'Max total cost' },
               ].map(stat => (
                 <div key={stat.label}>
-                  <div className="text-2xl font-bold text-white">{stat.value}</div>
-                  <div className="text-xs text-blue-200/80 mt-0.5">{stat.label}</div>
+                  <div className="text-3xl font-bold"
+                    style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
+                    {stat.value}
+                  </div>
+                  <div className="text-xs mt-0.5" style={{ color: th.muted }}>{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Right: Dashboard screenshot */}
-          <div className="hidden lg:block">
-            <img
-              src="/image.png"
-              alt="SellMyHousePro dashboard showing Planning, Marketing, Legal, Documents and Logistics modules"
-              className="w-full rounded-2xl border border-white/20 shadow-2xl"
-            />
+        {/* Right — full-bleed stone farmhouse photo */}
+        <div className="hidden lg:block lg:w-[48%] relative overflow-hidden">
+          {/* ⚠️  IMAGE NOTE: rename house2.jpg → house2.jpg in /public */}
+          <img
+            src="/house2.jpg"
+            alt="Stone farmhouse, South West France — sold using SellMyHousePro"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+          {/* Gradient bleed into left panel */}
+          <div className="absolute inset-0"
+            style={{ background: `linear-gradient(to right, ${th.cream} 0%, transparent 8%)` }} />
+          {/* Caption pill */}
+          <div className="absolute bottom-10 left-6 right-6">
+            <div className="inline-block px-5 py-3"
+              style={{ background: 'rgba(42,32,24,0.72)', backdropFilter: 'blur(6px)' }}>
+              <p className="text-[10px] uppercase tracking-widest mb-0.5"
+                style={{ color: 'rgba(247,242,234,0.6)' }}>
+                SOLD USING SELLMYHOUSEPRO
+              </p>
+              <p className="text-sm font-medium"
+                style={{ fontFamily: "'Playfair Display', serif", color: th.cream }}>
+                Stone Farmhouse · South West France
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Pricing ────────────────────────────────────────────────── */}
-      <section id="pricing" className="bg-[#1a2f4a] py-20 px-4 sm:px-6">
+      {/* ════════════════════════════════════════════════════════════
+          FEATURES — intro banner
+      ════════════════════════════════════════════════════════════ */}
+      <section style={{ background: th.stone }} className="py-20 px-6 text-center">
+        <Eyebrow label="16 feature modules" />
+        <h2 className="text-4xl md:text-5xl font-normal"
+          style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
+          Everything you need.<br /><em>Nothing you don't.</em>
+        </h2>
+        <p className="mt-5 text-base max-w-xl mx-auto" style={{ color: th.muted }}>
+          Hover over any module card to learn exactly what it does and how it saves you time.
+        </p>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          FEATURES — cascading 4-column waterfall (desktop)
+                     2-column grid (mobile)
+      ════════════════════════════════════════════════════════════ */}
+      <section id="features" style={{ background: th.cream }} className="py-16 px-6">
+        <div className="max-w-7xl mx-auto">
+
+          {/* Desktop cascade */}
+          <div className="hidden lg:flex gap-5 items-start">
+            {[0, 1, 2, 3].map(col => {
+              // Each column is staggered downward to create the waterfall
+              const topOffsets = [0, 52, 24, 76];
+              const colFeatures = features.filter((_, i) => i % 4 === col);
+              return (
+                <div key={col} className="flex flex-col gap-5 flex-1"
+                  style={{ marginTop: topOffsets[col] }}>
+                  {colFeatures.map(({ icon: Icon, title, desc }) => {
+                    const tooltipText = featureTooltips[title];
+                    const card = (
+                      <FeatureCard key={title} Icon={Icon} title={title} desc={desc} />
+                    );
+                    return tooltipText
+                      ? <Tooltip key={title} text={tooltipText}>{card}</Tooltip>
+                      : <div key={title}>{card}</div>;
+                  })}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile 2-col grid */}
+          <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {features.map(({ icon: Icon, title, desc }) => (
+              <FeatureCard key={title} Icon={Icon} title={title} desc={desc} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          PRICING
+      ════════════════════════════════════════════════════════════ */}
+      <section id="pricing" className="py-24 px-6" style={{ background: th.deepOlive }}>
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Pay only while you're selling.</h2>
-            <p className="text-blue-200 text-lg">Hit your cap and keep using everything — free.</p>
+
+          <div className="text-center mb-16">
+            <Eyebrow label="Pricing" light />
+            <h2 className="text-4xl md:text-5xl font-normal mb-3"
+              style={{ fontFamily: "'Playfair Display', serif", color: th.cream }}>
+              Pay only while you're selling.
+            </h2>
+            <p className="text-base" style={{ color: 'rgba(247,242,234,0.55)' }}>
+              Hit your cap and keep using everything — free.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
 
             {/* Starter */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col h-full">
-              <div className="mb-6">
-                <p className="text-blue-300 text-sm font-semibold uppercase tracking-wider mb-2">Starter</p>
-                <div className="flex items-end gap-1">
-                  <span className="text-4xl font-bold text-white">Free</span>
-                </div>
-                <p className="text-blue-200/60 text-sm mt-1">Forever</p>
+            <div className="p-8 flex flex-col h-full"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: th.gold }}>Starter</p>
+              <div className="flex items-end gap-1 mb-1">
+                <span className="text-4xl font-bold"
+                  style={{ fontFamily: "'Playfair Display', serif", color: th.cream }}>Free</span>
               </div>
+              <p className="text-xs mb-8" style={{ color: 'rgba(247,242,234,0.35)' }}>Forever</p>
               <ul className="space-y-3 flex-1 mb-8">
                 {['Sale Planner & checklist', 'Job Manager with costings'].map(item => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-blue-100">
-                    <CheckCircle className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <li key={item} className="flex items-start gap-3 text-sm"
+                    style={{ color: 'rgba(247,242,234,0.65)' }}>
+                    <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: th.oliveMid }} />
                     {item}
                   </li>
                 ))}
               </ul>
-              <button className="w-full py-3 rounded-xl border border-white/30 text-white font-semibold text-sm hover:bg-white/10 transition-colors">
+              <button className="w-full py-3 text-sm font-semibold transition-opacity hover:opacity-75"
+                style={{ border: '1px solid rgba(255,255,255,0.2)', color: th.cream, background: 'transparent' }}>
                 Get started free
               </button>
             </div>
 
-            {/* Essentials — blue top accent */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden flex flex-col h-full">
-              <div className="h-1 bg-[#2E6DA4]" />
+            {/* Essentials */}
+            <div className="flex flex-col h-full overflow-hidden"
+              style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${th.terracotta}`, borderTop: `3px solid ${th.terracotta}` }}>
               <div className="p-8 flex flex-col flex-1">
-                <div className="mb-6">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <p className="text-blue-300 text-sm font-semibold uppercase tracking-wider">Essentials</p>
-                    <span className="bg-blue-500/20 text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-blue-400/20 whitespace-nowrap">Best for agent-assisted sellers</span>
-                  </div>
-                  <div className="flex items-end gap-1">
-                    <span className="text-4xl font-bold text-white">€15</span>
-                    <span className="text-blue-300 text-sm mb-1.5">/month</span>
-                  </div>
-                  <p className="text-blue-200/60 text-sm mt-1">Maximum cost: €135 — then free</p>
+                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: th.terracotta }}>Essentials</p>
+                <span className="text-xs mb-3" style={{ color: 'rgba(247,242,234,0.45)' }}>
+                  Best for agent-assisted sellers
+                </span>
+                <div className="flex items-end gap-1 mb-1">
+                  <span className="text-4xl font-bold"
+                    style={{ fontFamily: "'Playfair Display', serif", color: th.cream }}>€15</span>
+                  <span className="text-sm mb-1.5" style={{ color: 'rgba(247,242,234,0.45)' }}>/month</span>
                 </div>
+                <p className="text-xs mb-8" style={{ color: 'rgba(247,242,234,0.35)' }}>
+                  Maximum cost: €135 — then free
+                </p>
                 <ul className="space-y-3 flex-1 mb-8">
                   {[
                     'Everything in Starter',
@@ -314,33 +434,41 @@ export default function App() {
                     'Agent Commission Guide',
                     'AI Assistant (30 requests/month)',
                   ].map(item => (
-                    <li key={item} className="flex items-start gap-3 text-sm text-blue-100">
-                      <CheckCircle className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                    <li key={item} className="flex items-start gap-3 text-sm"
+                      style={{ color: 'rgba(247,242,234,0.65)' }}>
+                      <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: th.terracotta }} />
                       {item}
                     </li>
                   ))}
                 </ul>
-                <button className="w-full py-3 rounded-xl bg-white text-[#1a2f4a] font-semibold text-sm hover:bg-blue-50 transition-colors">
+                <button className="w-full py-3 text-sm font-semibold transition-opacity hover:opacity-85"
+                  style={{ background: th.terracotta, color: th.cream }}>
                   Start free trial
                 </button>
               </div>
             </div>
 
-            {/* Complete — elevated, blue top accent */}
-            <div className="relative bg-white rounded-2xl overflow-hidden flex flex-col shadow-2xl scale-[1.04] border-2 border-amber-400/30">
-              <div className="h-1 bg-[#2E6DA4]" />
+            {/* Complete — elevated, gold border */}
+            <div className="relative flex flex-col overflow-hidden"
+              style={{
+                background: th.cream,
+                border: `2px solid ${th.gold}`,
+                borderTop: `4px solid ${th.gold}`,
+                transform: 'scale(1.04)',
+                boxShadow: `0 20px 60px rgba(42,32,24,0.35)`,
+              }}>
               <div className="p-8 flex flex-col flex-1">
-                <div className="mb-6">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <p className="text-[#1a2f4a] text-sm font-semibold uppercase tracking-wider">Complete</p>
-                    <span className="bg-amber-400 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">Best for private sellers</span>
-                  </div>
-                  <div className="flex items-end gap-1">
-                    <span className="text-4xl font-bold text-[#1a2f4a]">€25</span>
-                    <span className="text-gray-500 text-sm mb-1.5">/month</span>
-                  </div>
-                  <p className="text-gray-400 text-sm mt-1">Maximum cost: €225 — then free</p>
+                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: th.gold }}>Complete</p>
+                <span className="inline-block text-xs font-bold px-2.5 py-0.5 mb-3 self-start"
+                  style={{ background: th.gold, color: 'white' }}>
+                  Best for private sellers
+                </span>
+                <div className="flex items-end gap-1 mb-1">
+                  <span className="text-4xl font-bold"
+                    style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>€25</span>
+                  <span className="text-sm mb-1.5" style={{ color: th.muted }}>/month</span>
                 </div>
+                <p className="text-xs mb-8" style={{ color: th.muted }}>Maximum cost: €225 — then free</p>
                 <ul className="space-y-3 flex-1 mb-8">
                   {[
                     'Everything in Essentials',
@@ -349,13 +477,14 @@ export default function App() {
                     'Social Media Marketing Hub',
                     'Unlimited AI Assistant',
                   ].map(item => (
-                    <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
-                      <CheckCircle className="w-4 h-4 text-[#2E6DA4] flex-shrink-0 mt-0.5" />
+                    <li key={item} className="flex items-start gap-3 text-sm" style={{ color: th.charcoal }}>
+                      <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: th.olive }} />
                       {item}
                     </li>
                   ))}
                 </ul>
-                <button className="w-full py-3 rounded-xl bg-[#2E6DA4] text-white font-semibold text-sm hover:bg-[#245989] transition-colors shadow-sm">
+                <button className="w-full py-3 text-sm font-semibold transition-opacity hover:opacity-85"
+                  style={{ background: th.olive, color: th.cream }}>
                   Start free trial
                 </button>
               </div>
@@ -363,89 +492,62 @@ export default function App() {
 
           </div>
 
-          <p className="text-center text-blue-300/60 text-sm mt-10">
+          <p className="text-center text-xs mt-12" style={{ color: 'rgba(247,242,234,0.3)' }}>
             No credit card required to start. Cancel any time. Your data is yours.
           </p>
         </div>
       </section>
 
-      {/* ── Features ───────────────────────────────────────────────── */}
-      <section id="features">
-        <div className="bg-white py-16 text-center px-4 sm:px-6">
-          <p className="text-[#2E6DA4] font-semibold text-sm uppercase tracking-wider mb-3">16 feature modules</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Everything you need — nothing you don't.
-          </h2>
-        </div>
-
-        {[0, 1, 2, 3].map(rowIdx => {
-          const row = features.slice(rowIdx * 4, rowIdx * 4 + 4);
-          const bg  = rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-          return (
-            <div key={rowIdx} className={`${bg} py-6 px-4 sm:px-6`}>
-              <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {row.map(({ icon: Icon, title, desc }) => {
-                  const tooltipText = featureTooltips[title];
-                  const card = (
-                    <div
-                      key={title}
-                      className="flex flex-col gap-3 p-5 rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-[#2E6DA4]/30 transition-all duration-200 cursor-default h-full"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-5 h-5 text-[#2E6DA4]" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm mb-1">{title}</p>
-                        <p className="text-gray-500 text-xs leading-relaxed">{desc}</p>
-                      </div>
-                    </div>
-                  );
-                  return tooltipText ? (
-                    <Tooltip key={title} text={tooltipText}>{card}</Tooltip>
-                  ) : (
-                    <div key={title}>{card}</div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </section>
-
-      {/* ── Who is it for? ─────────────────────────────────────────── */}
-      <section id="about" className="bg-white py-20 px-4 sm:px-6">
+      {/* ════════════════════════════════════════════════════════════
+          WHO IS IT FOR
+      ════════════════════════════════════════════════════════════ */}
+      <section id="about" className="py-24 px-6" style={{ background: th.stone }}>
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-[#2E6DA4] font-semibold text-sm uppercase tracking-wider mb-3">Who is it for?</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Two ways to sell. One platform.</h2>
+          <div className="text-center mb-16">
+            <Eyebrow label="Who is it for?" />
+            <h2 className="text-4xl md:text-5xl font-normal"
+              style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
+              Two ways to sell.<br /><em>One platform.</em>
+            </h2>
           </div>
 
-          {/* items-stretch ensures equal height */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Agent card */}
-            <div className="border border-gray-100 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow flex flex-col">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-5 flex-shrink-0">
-                <Handshake className="w-6 h-6 text-[#2E6DA4]" />
+            <div className="p-10 flex flex-col"
+              style={{ background: 'white', border: `1px solid rgba(196,97,74,0.18)` }}>
+              <div className="w-12 h-12 flex items-center justify-center mb-6"
+                style={{ background: '#F5EDE8' }}>
+                <Handshake className="w-6 h-6" style={{ color: th.terracotta }} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Selling through an agent</h3>
-              <span className="inline-block bg-blue-50 text-[#2E6DA4] text-xs font-semibold px-3 py-1 rounded-full border border-blue-100 mb-4 self-start">
+              <h3 className="text-2xl font-normal mb-2"
+                style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
+                Selling through an agent
+              </h3>
+              <span className="inline-block text-xs font-semibold px-3 py-1 mb-6 self-start"
+                style={{ background: '#F5EDE8', color: th.terracotta, border: `1px solid rgba(196,97,74,0.2)` }}>
                 Essentials plan recommended
               </span>
-              <p className="text-gray-600 leading-relaxed text-sm flex-1">
+              <p className="text-sm leading-relaxed" style={{ color: th.muted }}>
                 A good agent earns their fee — viewings, negotiation, diagnostics, notaire introductions and hand-holding through the transaction. But their service stops there. SellMyHousePro handles everything either side of it: preparation, documents, translations, inventories and handover. The part no agent covers.
               </p>
             </div>
 
             {/* Private seller card */}
-            <div className="border border-gray-100 rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow flex flex-col">
-              <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center mb-5 flex-shrink-0">
-                <UserSquare2 className="w-6 h-6 text-amber-600" />
+            <div className="p-10 flex flex-col"
+              style={{ background: 'white', border: `1px solid rgba(61,82,41,0.18)` }}>
+              <div className="w-12 h-12 flex items-center justify-center mb-6"
+                style={{ background: '#EAF0E5' }}>
+                <UserSquare2 className="w-6 h-6" style={{ color: th.olive }} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Selling privately</h3>
-              <span className="inline-block bg-amber-50 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full border border-amber-200 mb-4 self-start">
+              <h3 className="text-2xl font-normal mb-2"
+                style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
+                Selling privately
+              </h3>
+              <span className="inline-block text-xs font-semibold px-3 py-1 mb-6 self-start"
+                style={{ background: '#EAF0E5', color: th.olive, border: `1px solid rgba(61,82,41,0.2)` }}>
                 Complete plan recommended
               </span>
-              <p className="text-gray-600 leading-relaxed text-sm flex-1">
+              <p className="text-sm leading-relaxed" style={{ color: th.muted }}>
                 Going it alone saves commission but adds complexity. SellMyHousePro gives you every tool a private seller needs — your own property website, buyer enquiry tracking, social media marketing, and the full legal and document framework — managed in one place.
               </p>
             </div>
@@ -453,67 +555,143 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── See it in action ───────────────────────────────────────── */}
-      <section className="bg-gray-50 py-20 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-[#2E6DA4] font-semibold text-sm uppercase tracking-wider mb-3">See it in action</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">See it in action.</h2>
-          <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-12">
-            This is a real property listing built with SellMyHousePro — a farmhouse in South West France, sold using our platform.
-          </p>
-          <div className="mx-auto max-w-[900px]">
-            <img
-              src="/example-property.jpg"
-              alt="Example property listing — farmhouse in Lot-et-Garonne"
-              className="w-full rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-gray-100"
-            />
-            <p className="mt-5 text-gray-400 text-sm italic">
-              Beautiful farmhouse, Lot-et-Garonne — listed, marketed and sold using SellMyHousePro.
+      {/* ════════════════════════════════════════════════════════════
+          SEE IT IN ACTION — two images: the house + listing output
+      ════════════════════════════════════════════════════════════ */}
+      <section className="py-24 px-6" style={{ background: th.cream }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <Eyebrow label="See it in action" />
+            <h2 className="text-4xl md:text-5xl font-normal"
+              style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
+              A real property.<br /><em>A real listing. A real sale.</em>
+            </h2>
+            <p className="mt-5 text-base max-w-xl mx-auto" style={{ color: th.muted }}>
+              This farmhouse in South West France was listed, marketed and sold using SellMyHousePro.
+              The listing site was live in under an hour.
             </p>
           </div>
-        </div>
-      </section>
 
-      {/* ── Founder story ──────────────────────────────────────────── */}
-      <section className="bg-gray-50 py-20 px-4 sm:px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-[#2E6DA4] font-semibold text-sm uppercase tracking-wider mb-4">Our story</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-            Built by someone who did it the hard way
-          </h2>
-          <p className="text-gray-600 leading-relaxed text-lg mb-10">
-            When we decided to sell our home in France, we discovered there was no single tool to manage the process. Just paperwork, confusing legal requirements, language barriers and no clear idea of where to start. So we built our own tools — and piece by piece, managed the sale ourselves. SellMyHousePro is those tools, combined, polished and powered by AI. We built the platform we wish we had.
-          </p>
-          <div className="inline-flex flex-col items-center gap-1">
-            <div className="w-12 h-px bg-gray-300" />
-            <span className="text-gray-500 text-sm font-medium italic mt-3">The SellMyHousePro Team</span>
+          {/* Side-by-side: property photo + listing screenshot */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            <div className="flex flex-col">
+              {/* ⚠️  IMAGE NOTE: rename 27d1256c6b758d6e40641bb8789b5c73.jpg → house-shutters.jpg in /public */}
+              <img
+                src="/house-shutters.jpg"
+                alt="French farmhouse with green shutters"
+                className="w-full h-full object-cover"
+                style={{ maxHeight: 420, border: `1px solid ${th.stone}` }}
+              />
+              <p className="mt-3 text-xs italic text-center" style={{ color: th.muted }}>
+                The property — Lot-et-Garonne, South West France
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <img
+                src="/example-property.jpg"
+                alt="Property listing built with SellMyHousePro"
+                className="w-full h-full object-cover object-top"
+                style={{ maxHeight: 420, border: `1px solid ${th.stone}`, boxShadow: `0 8px 40px rgba(42,32,24,0.1)` }}
+              />
+              <p className="mt-3 text-xs italic text-center" style={{ color: th.muted }}>
+                The listing — built with our Property Website Builder
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-wrap justify-center gap-8">
+            {[
+              'Professional listing site in under an hour',
+              'Social media content generated automatically',
+              'All buyer enquiries tracked in one place',
+            ].map(item => (
+              <div key={item} className="flex items-center gap-2.5">
+                <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: th.terracotta }} />
+                <span className="text-sm" style={{ color: th.muted }}>{item}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Footer ─────────────────────────────────────────────────── */}
-      <footer id="contact" className="bg-[#1a2f4a] px-4 sm:px-6 pt-16 pb-8">
+      {/* ════════════════════════════════════════════════════════════
+          FOUNDER STORY — text + couple photo
+      ════════════════════════════════════════════════════════════ */}
+      <section className="py-24 px-6 overflow-hidden" style={{ background: th.stone }}>
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 pb-12 border-b border-white/10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            {/* Photo — first on mobile, second on desktop */}
+            <div className="relative order-2 lg:order-1 flex justify-center">
+              <div className="relative inline-block">
+                {/* ⚠️  IMAGE NOTE: rename DSC06209.jpg → couple.jpg in /public */}
+                <img
+                  src="/couple.jpg"
+                  alt="Couple in a sun-dappled olive garden in France"
+                  className="w-full object-cover object-top"
+                  style={{ maxWidth: 460, maxHeight: 600 }}
+                />
+                {/* Decorative offset border */}
+                <div className="absolute -bottom-5 -right-5 w-24 h-24 hidden lg:block"
+                  style={{ border: `2px solid ${th.terracotta}`, zIndex: -1 }} />
+                <div className="absolute -top-5 -left-5 w-16 h-16 hidden lg:block"
+                  style={{ border: `2px solid ${th.gold}`, zIndex: -1 }} />
+              </div>
+            </div>
+
+            {/* Text */}
+            <div className="order-1 lg:order-2">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="h-px w-12" style={{ background: th.terracotta }} />
+                <p className="text-xs uppercase tracking-widest font-semibold"
+                  style={{ color: th.terracotta }}>Our story</p>
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-normal mb-8"
+                style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
+                Built by someone<br /><em>who did it the hard way.</em>
+              </h2>
+              <p className="text-base leading-relaxed mb-5" style={{ color: th.muted }}>
+                When we decided to sell our home in France, we discovered there was no single tool to manage the process. Just paperwork, confusing legal requirements, language barriers and no clear idea of where to start.
+              </p>
+              <p className="text-base leading-relaxed mb-10" style={{ color: th.muted }}>
+                So we built our own tools — and piece by piece, managed the sale ourselves. SellMyHousePro is those tools, combined, polished and powered by AI. We built the platform we wish we had.
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="h-px w-10" style={{ background: th.terracotta }} />
+                <span className="text-sm italic" style={{ color: th.muted }}>
+                  The SellMyHousePro Team
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          FOOTER
+      ════════════════════════════════════════════════════════════ */}
+      <footer id="contact" className="px-6 pt-16 pb-10" style={{ background: th.charcoal }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 pb-12"
+            style={{ borderBottom: '1px solid rgba(247,242,234,0.1)' }}>
 
             {/* Brand */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-12 w-auto object-contain" />
-              </div>
-              <p className="text-blue-200/70 text-sm leading-relaxed italic">Selling your home is a big deal. Plan it like one.</p>
+              <img src="/SMHP_logo.png" alt="SellMyHousePro" className="h-12 w-auto object-contain mb-4" />
+              <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(247,242,234,0.45)' }}>
+                Selling your home is a big deal. Plan it like one.
+              </p>
             </div>
 
             {/* Links */}
             <div className="flex flex-col gap-3">
-              <p className="text-white font-semibold text-sm mb-1">Quick links</p>
+              <p className="text-xs uppercase tracking-widest font-semibold mb-2"
+                style={{ color: th.terracotta }}>Quick links</p>
               {navLinks.map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  onClick={e => handleNavClick(e, href)}
-                  className="text-blue-200/70 text-sm hover:text-white transition-colors"
-                >
+                <a key={label} href={href} onClick={e => handleNavClick(e, href)}
+                  className="text-sm transition-opacity hover:opacity-100"
+                  style={{ color: 'rgba(247,242,234,0.5)' }}>
                   {label}
                 </a>
               ))}
@@ -521,12 +699,13 @@ export default function App() {
 
             {/* Waitlist */}
             <div>
-              <p className="text-white font-semibold text-sm mb-4">Join the waitlist</p>
+              <p className="text-xs uppercase tracking-widest font-semibold mb-4"
+                style={{ color: th.terracotta }}>Join the waitlist</p>
               <FooterWaitlist />
             </div>
           </div>
 
-          <p className="text-center text-blue-300/40 text-xs mt-8">
+          <p className="text-center text-xs mt-8" style={{ color: 'rgba(247,242,234,0.2)' }}>
             © 2026 SellMyHousePro. Designed for French, Spanish, UK and international property sales.
           </p>
         </div>
@@ -535,9 +714,50 @@ export default function App() {
   );
 }
 
+// ── Feature Card (extracted so it can be used in both desktop cascade + mobile grid)
+function FeatureCard({ Icon, title, desc }: {
+  Icon: React.ElementType;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div
+      className="flex flex-col gap-4 p-6 cursor-default transition-all duration-200"
+      style={{
+        background: 'white',
+        border: `1px solid #EDE8DF`,
+        borderRadius: '2px',
+        boxShadow: '0 1px 4px rgba(42,32,24,0.05)',
+      }}
+      onMouseEnter={e => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.borderColor = '#C4614A';
+        el.style.boxShadow = '0 6px 20px rgba(196,97,74,0.12)';
+        el.style.transform = 'translateY(-3px)';
+      }}
+      onMouseLeave={e => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.borderColor = '#EDE8DF';
+        el.style.boxShadow = '0 1px 4px rgba(42,32,24,0.05)';
+        el.style.transform = 'translateY(0)';
+      }}
+    >
+      <div className="w-9 h-9 flex items-center justify-center flex-shrink-0"
+        style={{ background: '#F5EDE8', borderRadius: '2px' }}>
+        <Icon className="w-4 h-4" style={{ color: '#C4614A' }} />
+      </div>
+      <div>
+        <p className="font-semibold text-sm mb-1" style={{ color: '#2A2018' }}>{title}</p>
+        <p className="text-xs leading-relaxed" style={{ color: '#7A6E60' }}>{desc}</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Footer waitlist sub-component ────────────────────────────────────────────
 function FooterWaitlist() {
   const [email, setEmail] = useState('');
-  const [state, setState] = useState<'idle' | 'loading' | 'success' | 'duplicate' | 'error'>('idle');
+  const [state, setState] = useState<'idle'|'loading'|'success'|'duplicate'|'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -549,45 +769,44 @@ function FooterWaitlist() {
     else                      setState('success');
   };
 
-  if (state === 'success') {
-    return (
-      <div className="flex items-center gap-2 text-green-300 text-sm">
-        <CheckCircle className="w-4 h-4 flex-shrink-0" />
-        You're on the list! We'll be in touch soon.
-      </div>
-    );
-  }
+  if (state === 'success') return (
+    <div className="flex items-center gap-2 text-sm" style={{ color: '#8FBD7A' }}>
+      <CheckCircle className="w-4 h-4 flex-shrink-0" />
+      You're on the list! We'll be in touch soon.
+    </div>
+  );
 
-  if (state === 'duplicate') {
-    return (
-      <div className="flex items-center gap-2 text-blue-300 text-sm">
-        <CheckCircle className="w-4 h-4 flex-shrink-0" />
-        You're already on the list!
-      </div>
-    );
-  }
+  if (state === 'duplicate') return (
+    <div className="flex items-center gap-2 text-sm" style={{ color: '#8FBD7A' }}>
+      <CheckCircle className="w-4 h-4 flex-shrink-0" />
+      You're already on the list!
+    </div>
+  );
 
   return (
     <div className="space-y-2">
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
-          type="email"
-          required
-          value={email}
+          type="email" required value={email}
           onChange={e => setEmail(e.target.value)}
           placeholder="Your email address"
-          className="flex-1 min-w-0 px-3 py-2.5 bg-white/10 border border-white/20 text-white placeholder-blue-300/50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="flex-1 min-w-0 px-3 py-2.5 text-sm focus:outline-none"
+          style={{
+            background: 'rgba(247,242,234,0.07)',
+            border: '1px solid rgba(247,242,234,0.15)',
+            color: '#F7F2EA',
+          }}
         />
-        <button
-          type="submit"
-          disabled={state === 'loading'}
-          className="flex-shrink-0 p-2.5 bg-[#2E6DA4] rounded-lg text-white hover:bg-[#245989] transition-colors disabled:opacity-60"
-        >
-          <Send className="w-4 h-4" />
+        <button type="submit" disabled={state === 'loading'}
+          className="flex-shrink-0 p-2.5 transition-opacity hover:opacity-75 disabled:opacity-40"
+          style={{ background: '#C4614A' }}>
+          <Send className="w-4 h-4" style={{ color: '#F7F2EA' }} />
         </button>
       </form>
       {state === 'error' && (
-        <p className="text-red-400 text-xs">Something went wrong. Please try again.</p>
+        <p className="text-xs" style={{ color: '#C4614A' }}>
+          Something went wrong. Please try again.
+        </p>
       )}
     </div>
   );
