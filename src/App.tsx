@@ -32,43 +32,43 @@ const th = {
 
 // ── Feature data ─────────────────────────────────────────────────────────────
 const features = [
-  { icon: ClipboardList, title: 'Sale Planner',                  desc: 'Master checklist and milestones for your entire sale' },
+  { icon: ClipboardList, title: 'Sale Planner',                  desc: 'Master checklist and milestones for your entire sale — tailored for France and Spain' },
   { icon: Wrench,        title: 'Job Manager',                   desc: 'Every repair and task, assigned, costed and tracked' },
   { icon: Globe,         title: 'Property Website Builder',      desc: 'A professional listing site in minutes — no coding needed' },
   { icon: Megaphone,     title: 'Marketing Hub',                 desc: 'Social media campaigns and copy, ready to post' },
-  { icon: FileText,      title: 'Pre-Sale Legal Docs',           desc: 'Know exactly what documents you need, by country' },
+  { icon: FileText,      title: 'Pre-Sale Legal Docs',           desc: 'Know exactly what documents you need — tailored for France and Spain' },
   { icon: UserSearch,    title: 'Agent Finder',                  desc: 'Find and contact local agents with one search' },
   { icon: MessageSquare, title: 'Enquiry Tracker',               desc: 'Log every buyer contact and never lose a lead' },
   { icon: Scale,         title: 'Post-Sale Legal Docs',          desc: 'Stay compliant through to completion' },
   { icon: FolderLock,    title: 'Document Vault',                desc: 'Every document in one secure, organised place' },
-  { icon: Languages,     title: 'AI Document Translation',       desc: 'French or Spanish documents translated instantly' },
+  { icon: Languages,     title: 'AI Document Translation',       desc: 'French and Spanish documents translated instantly' },
   { icon: Package,       title: 'Sale Inventory',                desc: 'Log everything included in the sale price' },
   { icon: Truck,         title: 'Removal Inventory',             desc: 'What you are keeping, with sizes and weights for removal firms' },
   { icon: BookOpen,      title: 'Buyer Handover Pack',           desc: 'How-to guides for your new owners — pool, heating, appliances' },
   { icon: ListChecks,    title: 'Final Checklist',               desc: 'Nothing left behind, nothing forgotten' },
   { icon: Receipt,       title: 'Agent Commission Guide',        desc: 'Understand your contract before you sign anything' },
   { icon: Bot,           title: 'AI Assistant',                  desc: 'Your intelligent companion for the whole journey — powered by Claude' },
-  { icon: Calculator,    title: 'Capital Gains Tax Calculator',  desc: 'Built-in French CGT calculator with duration taper relief, works allowance and tax representative guidance' },
+  { icon: Calculator,    title: 'Capital Gains Tax Calculator',  desc: 'Built-in CGT calculator for France and Spain — taper relief, works allowance and tax representative guidance' },
 ];
 
 const featureTooltips: Record<string, string> = {
-  'Sale Planner': 'A full checklist in English and your local language, so you can work alongside local tradespeople, notaires and agents without anything getting lost in translation.',
+  'Sale Planner': 'A full checklist in English, French and Spanish, so you can work alongside local tradespeople, notaires and agents without anything getting lost in translation.',
   'Job Manager': 'Assign every job to a worker or tradesman, track materials with a built-in shopping list, log timesheets and store quotations — all in one place.',
   'Property Website Builder': 'A simple template where you add your description, features, price and unique selling points, then upload your photos — and get a professional looking property page ready to share in minutes.',
   'Marketing Hub': 'Generate outstanding social media content for Facebook, Instagram, X and more — tailored to your property and designed to drive traffic directly to your listing.',
-  'Pre-Sale Legal Docs': 'Get an up-to-date checklist of exactly what you need to provide before your property goes live — specific to the country you are selling in, so nothing gets missed.',
+  'Pre-Sale Legal Docs': 'Get an up-to-date checklist of exactly what you need to provide before your property goes live — specific to France and Spain, so nothing gets missed.',
   'Agent Finder': 'Find local sale agents wherever your property is located, with recommendations, reviews and references — so you can choose the right agent with confidence.',
   'Enquiry Tracker': 'Log every sales enquiry from first contact to final offer — record conversations, comments, visit notes and concerns, so you always know who is serious and who is not.',
   'Post-Sale Legal Docs': 'Get a full up-to-date list of everything you need from sale agreed right through to final completion — guiding you step by step to a clean handover.',
   'Document Vault': 'Store a copy of every document securely in the cloud, accessible from any device, anywhere in the world, at any time.',
-  'AI Document Translation': 'Complete document translation in one pass — no copy-pasting into Google Translate. Load your French or Spanish documents and our AI handles the rest, accurately and instantly.',
+  'AI Document Translation': 'Complete document translation in one pass — no copy-pasting into Google Translate. Load your French or Spanish legal documents and our AI handles the rest, accurately and instantly.',
   'Sale Inventory': 'Built-in camera mode lets you photograph each item, add a description and value, then export everything to a spreadsheet for buyer agreement or a professional PDF for the notaire.',
   'Removal Inventory': 'While building your sale inventory, keep a parallel log of everything you are keeping — with photos, weights, values and dimensions. Invaluable whether you are hiring a removal firm or doing it yourself.',
   'Buyer Handover Pack': 'Build your handover pack as you go — scan instruction manuals, collect warranties and utility info, and give your buyer everything they need from day one.',
   'Final Checklist': 'Make sure every box is ticked and every document is in place before the final handover — so completion day goes smoothly and nothing is left behind.',
   'Agent Commission Guide': 'Know your rights before anyone comes knocking for a share of the sale. Understand exactly which agents are entitled to commission and which are not — and how to protect yourself.',
   'AI Assistant': 'Ask our AI about any clause or issue in any document or survey report. Get a clear, plain-English explanation with no legal jargon.',
-  'Capital Gains Tax Calculator': 'Enter your purchase price, sale price and ownership duration — and get a full French CGT breakdown including the annual taper relief abatements, the 15% works allowance and guidance on whether you need a French tax representative for your sale.',
+  'Capital Gains Tax Calculator': 'Enter your purchase price, sale price and ownership duration — and get a full CGT breakdown for France or Spain, including taper relief abatements, the works allowance and guidance on whether you need a local tax representative for your sale.',
 };
 
 const navLinks = [
@@ -219,7 +219,7 @@ export default function App() {
               Start your free trial
             </a>
 
-            <p className="mt-4 text-xs" style={{ color: th.muted }}>No credit card required. Designed for French, Spanish, UK and international property sales.</p>
+            <p className="mt-4 text-xs" style={{ color: th.muted }}>No credit card required. Built for France and Spain — more countries coming soon.</p>
 
             {/* Stats */}
             <div className="flex items-center gap-10 mt-14 pt-8"
@@ -280,6 +280,11 @@ export default function App() {
         <p className="mt-5 text-base max-w-xl mx-auto" style={{ color: th.muted }}>
           Hover over any module card to learn exactly what it does and how it saves you time.
         </p>
+        <div className="inline-flex items-center gap-2 mt-6 px-4 py-2 text-xs font-semibold"
+          style={{ background: th.cream, border: `1px solid ${th.stone}`, color: th.muted }}>
+          <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: th.oliveMid }} />
+          Currently supporting France &amp; Spain &nbsp;·&nbsp; More countries coming soon — Portugal, Italy and Greece
+        </div>
       </section>
 
       {/* ════════════════════════════════════════════════════════════
@@ -507,7 +512,7 @@ export default function App() {
                 Complete plan recommended
               </span>
               <p className="text-sm leading-relaxed" style={{ color: th.muted }}>
-                Going it alone saves commission but adds complexity. SellMyHousePro gives you every tool a private seller needs — your own property website, buyer enquiry tracking, social media marketing, and the full legal and document framework — managed in one place.
+                Going it alone saves commission but adds complexity. SellMyHousePro gives you every tool a private seller needs in France or Spain — your own property website, buyer enquiry tracking, social media marketing, and the full legal and document framework — managed in one place.
               </p>
             </div>
           </div>
@@ -670,7 +675,7 @@ export default function App() {
           </div>
 
           <p className="text-center text-xs mt-8" style={{ color: 'rgba(247,242,234,0.2)' }}>
-            © 2026 SellMyHousePro. Designed for French, Spanish, UK and international property sales.
+            © 2026 SellMyHousePro. Built for selling in France and Spain — more countries coming soon.
           </p>
         </div>
       </footer>
