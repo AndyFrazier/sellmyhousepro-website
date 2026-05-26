@@ -1,11 +1,10 @@
-import { useState, useRef } from 'react';
-import { joinWaitlist } from './lib/supabase';
+import { useState } from 'react';
 import {
-  Menu, X, ArrowRight, CheckCircle,
+  Menu, X,
   ClipboardList, Wrench, Globe, Megaphone, FileText, UserSearch,
   MessageSquare, Scale, FolderLock, Languages, Package, Truck,
-  BookOpen, ListChecks, Receipt, Bot,
-  Handshake, SquareUser as UserSquare2, Send,
+  BookOpen, ListChecks, Receipt, Bot, Calculator,
+  Handshake, SquareUser as UserSquare2,
 } from 'lucide-react';
 
 // ── Google Fonts ─────────────────────────────────────────────────────────────
@@ -33,22 +32,23 @@ const th = {
 
 // ── Feature data ─────────────────────────────────────────────────────────────
 const features = [
-  { icon: ClipboardList, title: 'Sale Planner',             desc: 'Master checklist and milestones for your entire sale' },
-  { icon: Wrench,        title: 'Job Manager',              desc: 'Every repair and task, assigned, costed and tracked' },
-  { icon: Globe,         title: 'Property Website Builder', desc: 'A professional listing site in minutes — no coding needed' },
-  { icon: Megaphone,     title: 'Marketing Hub',            desc: 'Social media campaigns and copy, ready to post' },
-  { icon: FileText,      title: 'Pre-Sale Legal Docs',      desc: 'Know exactly what documents you need, by country' },
-  { icon: UserSearch,    title: 'Agent Finder',             desc: 'Find and contact local agents with one search' },
-  { icon: MessageSquare, title: 'Enquiry Tracker',          desc: 'Log every buyer contact and never lose a lead' },
-  { icon: Scale,         title: 'Post-Sale Legal Docs',     desc: 'Stay compliant through to completion' },
-  { icon: FolderLock,    title: 'Document Vault',           desc: 'Every document in one secure, organised place' },
-  { icon: Languages,     title: 'AI Document Translation',  desc: 'French or Spanish documents translated instantly' },
-  { icon: Package,       title: 'Sale Inventory',           desc: 'Log everything included in the sale price' },
-  { icon: Truck,         title: 'Removal Inventory',        desc: 'What you are keeping, with sizes and weights for removal firms' },
-  { icon: BookOpen,      title: 'Buyer Handover Pack',      desc: 'How-to guides for your new owners — pool, heating, appliances' },
-  { icon: ListChecks,    title: 'Final Checklist',          desc: 'Nothing left behind, nothing forgotten' },
-  { icon: Receipt,       title: 'Agent Commission Guide',   desc: 'Understand your contract before you sign anything' },
-  { icon: Bot,           title: 'AI Assistant',             desc: 'Your intelligent companion for the whole journey — powered by Claude' },
+  { icon: ClipboardList, title: 'Sale Planner',                  desc: 'Master checklist and milestones for your entire sale' },
+  { icon: Wrench,        title: 'Job Manager',                   desc: 'Every repair and task, assigned, costed and tracked' },
+  { icon: Globe,         title: 'Property Website Builder',      desc: 'A professional listing site in minutes — no coding needed' },
+  { icon: Megaphone,     title: 'Marketing Hub',                 desc: 'Social media campaigns and copy, ready to post' },
+  { icon: FileText,      title: 'Pre-Sale Legal Docs',           desc: 'Know exactly what documents you need, by country' },
+  { icon: UserSearch,    title: 'Agent Finder',                  desc: 'Find and contact local agents with one search' },
+  { icon: MessageSquare, title: 'Enquiry Tracker',               desc: 'Log every buyer contact and never lose a lead' },
+  { icon: Scale,         title: 'Post-Sale Legal Docs',          desc: 'Stay compliant through to completion' },
+  { icon: FolderLock,    title: 'Document Vault',                desc: 'Every document in one secure, organised place' },
+  { icon: Languages,     title: 'AI Document Translation',       desc: 'French or Spanish documents translated instantly' },
+  { icon: Package,       title: 'Sale Inventory',                desc: 'Log everything included in the sale price' },
+  { icon: Truck,         title: 'Removal Inventory',             desc: 'What you are keeping, with sizes and weights for removal firms' },
+  { icon: BookOpen,      title: 'Buyer Handover Pack',           desc: 'How-to guides for your new owners — pool, heating, appliances' },
+  { icon: ListChecks,    title: 'Final Checklist',               desc: 'Nothing left behind, nothing forgotten' },
+  { icon: Receipt,       title: 'Agent Commission Guide',        desc: 'Understand your contract before you sign anything' },
+  { icon: Bot,           title: 'AI Assistant',                  desc: 'Your intelligent companion for the whole journey — powered by Claude' },
+  { icon: Calculator,    title: 'Capital Gains Tax Calculator',  desc: 'Built-in French CGT calculator with duration taper relief, works allowance and tax representative guidance' },
 ];
 
 const featureTooltips: Record<string, string> = {
@@ -68,6 +68,7 @@ const featureTooltips: Record<string, string> = {
   'Final Checklist': 'Make sure every box is ticked and every document is in place before the final handover — so completion day goes smoothly and nothing is left behind.',
   'Agent Commission Guide': 'Know your rights before anyone comes knocking for a share of the sale. Understand exactly which agents are entitled to commission and which are not — and how to protect yourself.',
   'AI Assistant': 'Ask our AI about any clause or issue in any document or survey report. Get a clear, plain-English explanation with no legal jargon.',
+  'Capital Gains Tax Calculator': 'Enter your purchase price, sale price and ownership duration — and get a full French CGT breakdown including the annual taper relief abatements, the 15% works allowance and guidance on whether you need a French tax representative for your sale.',
 };
 
 const navLinks = [
@@ -76,6 +77,8 @@ const navLinks = [
   { label: 'About',    href: '#about'    },
   { label: 'Contact',  href: '#contact'  },
 ];
+
+const APP_URL = 'https://sellmyhousepro-app.netlify.app/';
 
 function smoothScroll(href: string) {
   const el = document.getElementById(href.replace('#', ''));
@@ -118,28 +121,11 @@ function Eyebrow({ label, light = false }: { label: string; light?: boolean }) {
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const [email, setEmail]       = useState('');
-  const [heroState, setHeroState] = useState<'idle'|'loading'|'success'|'duplicate'|'error'>('idle');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
-    setHeroState('loading');
-    const result = await joinWaitlist(email.trim());
-    if (result.alreadyExists) setHeroState('duplicate');
-    else if (result.error)    setHeroState('error');
-    else                      setHeroState('success');
-  };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMenuOpen(false);
     smoothScroll(href);
-    // If going to hero, focus the email input so users know what to do
-    if (href === '#hero') {
-      setTimeout(() => emailInputRef.current?.focus(), 600);
-    }
   };
 
   return (
@@ -164,10 +150,10 @@ export default function App() {
             ))}
           </div>
 
-          <a href="#hero" onClick={e => handleNavClick(e, '#hero')}
+          <a href={APP_URL} target="_blank" rel="noopener noreferrer"
             className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-85"
             style={{ background: th.terracotta, color: th.cream }}>
-            Join Waitlist
+            Get Started
           </a>
 
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2" style={{ color: th.charcoal }}>
@@ -184,10 +170,10 @@ export default function App() {
                 {label}
               </a>
             ))}
-            <a href="#hero" onClick={e => handleNavClick(e, '#hero')}
+            <a href={APP_URL} target="_blank" rel="noopener noreferrer"
               className="block text-center py-3 text-sm font-semibold mt-2"
               style={{ background: th.terracotta, color: th.cream }}>
-              Join Waitlist
+              Get Started
             </a>
           </div>
         )}
@@ -208,7 +194,7 @@ export default function App() {
               <span className="flex items-center gap-2 text-xs uppercase tracking-widest font-semibold"
                 style={{ color: th.terracotta }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse inline-block" />
-                Now accepting waitlist signups
+                Now live — start your free trial
               </span>
             </div>
 
@@ -227,55 +213,19 @@ export default function App() {
               SellMyHousePro gives you a proven project-management framework for every stage of your sale — whether you're using an agent or going it alone. Built by someone who sold their house in France and learned everything the hard way.
             </p>
 
-            {/* Waitlist form / states */}
-            {heroState === 'success' ? (
-              <div className="flex items-center gap-3 p-4"
-                style={{ background: '#EAF2E8', border: '1px solid #8FBD7A' }}>
-                <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: th.olive }} />
-                <span className="font-semibold text-sm" style={{ color: th.olive }}>
-                  You're on the list! We'll be in touch soon.
-                </span>
-              </div>
-            ) : heroState === 'duplicate' ? (
-              <div className="flex items-center gap-3 p-4" style={{ background: th.stone }}>
-                <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: th.olive }} />
-                <span className="font-semibold text-sm" style={{ color: th.olive }}>
-                  You're already on the list!
-                </span>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md">
-                <input
-                  ref={emailInputRef}
-                  type="email" required value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  className="flex-1 px-4 py-3 text-sm focus:outline-none"
-                  style={{ background: 'white', border: `1px solid ${th.stone}`, color: th.charcoal }}
-                />
-                <button type="submit" disabled={heroState === 'loading'}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold whitespace-nowrap transition-opacity hover:opacity-85 disabled:opacity-60"
-                  style={{ background: th.terracotta, color: th.cream }}>
-                  {heroState === 'loading'
-                    ? 'Joining…'
-                    : <><span>Join Waitlist</span><ArrowRight className="w-4 h-4" /></>}
-                </button>
-                {heroState === 'error' && (
-                  <p className="text-xs mt-1" style={{ color: th.terracotta }}>
-                    Something went wrong. Please try again.
-                  </p>
-                )}
-              </form>
-            )}
+            <a href={APP_URL} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-8 py-4 text-sm font-semibold transition-opacity hover:opacity-85"
+              style={{ background: th.terracotta, color: th.cream }}>
+              Start your free trial
+            </a>
 
-            <p className="mt-4 text-xs" style={{ color: th.muted }}>Free to join. No card required. Launching soon.</p>
-            <p className="mt-1 text-xs" style={{ color: th.muted }}>Designed for French, Spanish, UK and international property sales</p>
+            <p className="mt-4 text-xs" style={{ color: th.muted }}>No credit card required. Designed for French, Spanish, UK and international property sales.</p>
 
             {/* Stats */}
             <div className="flex items-center gap-10 mt-14 pt-8"
               style={{ borderTop: `1px solid ${th.stone}` }}>
               {[
-                { value: '16',   label: 'Feature modules' },
+                { value: '17',   label: 'Feature modules' },
                 { value: '2',    label: 'Simple plans' },
                 { value: '€225', label: 'Max total cost' },
               ].map(stat => (
@@ -293,7 +243,6 @@ export default function App() {
 
         {/* Right — full-bleed stone farmhouse photo */}
         <div className="hidden lg:block lg:w-[48%] relative overflow-hidden">
-          {/* ⚠️  IMAGE NOTE: rename house2.jpg → house2.jpg in /public */}
           <img
             src="/house2.jpg"
             alt="Stone farmhouse, South West France — sold using SellMyHousePro"
@@ -323,7 +272,7 @@ export default function App() {
           FEATURES — intro banner
       ════════════════════════════════════════════════════════════ */}
       <section style={{ background: th.stone }} className="py-20 px-6 text-center">
-        <Eyebrow label="16 feature modules" />
+        <Eyebrow label="17 feature modules" />
         <h2 className="text-4xl md:text-5xl font-normal"
           style={{ fontFamily: "'Playfair Display', serif", color: th.charcoal }}>
           Everything you need.<br /><em>Nothing you don't.</em>
@@ -343,7 +292,6 @@ export default function App() {
           {/* Desktop cascade */}
           <div className="hidden lg:flex gap-5 items-start">
             {[0, 1, 2, 3].map(col => {
-              // Each column is staggered downward to create the waterfall
               const topOffsets = [0, 52, 24, 76];
               const colFeatures = features.filter((_, i) => i % 4 === col);
               return (
@@ -404,12 +352,13 @@ export default function App() {
                 {['Sale Planner & checklist', 'Job Manager with costings'].map(item => (
                   <li key={item} className="flex items-start gap-3 text-sm"
                     style={{ color: 'rgba(247,242,234,0.65)' }}>
-                    <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: th.oliveMid }} />
+                    <Calculator className="w-4 h-4 flex-shrink-0 mt-0.5 hidden" style={{ color: th.oliveMid }} />
+                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: th.oliveMid }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     {item}
                   </li>
                 ))}
               </ul>
-              <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
+              <a href={APP_URL} target="_blank" rel="noopener noreferrer"
                 className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-75"
                 style={{ border: '1px solid rgba(255,255,255,0.2)', color: th.cream, background: 'transparent' }}>
                 Get started free
@@ -439,16 +388,17 @@ export default function App() {
                     'Document Vault & AI Translation',
                     'Inventories & Buyer Handover Pack',
                     'Agent Commission Guide',
+                    'Capital Gains Tax Calculator',
                     'AI Assistant (30 requests/month)',
                   ].map(item => (
                     <li key={item} className="flex items-start gap-3 text-sm"
                       style={{ color: 'rgba(247,242,234,0.65)' }}>
-                      <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: th.terracotta }} />
+                      <svg className="w-4 h-4 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: th.terracotta }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                       {item}
                     </li>
                   ))}
                 </ul>
-                <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
+                <a href={APP_URL} target="_blank" rel="noopener noreferrer"
                   className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-85"
                   style={{ background: th.terracotta, color: th.cream }}>
                   Start free trial
@@ -486,12 +436,12 @@ export default function App() {
                     'Unlimited AI Assistant',
                   ].map(item => (
                     <li key={item} className="flex items-start gap-3 text-sm" style={{ color: th.charcoal }}>
-                      <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: th.olive }} />
+                      <svg className="w-4 h-4 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: th.olive }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                       {item}
                     </li>
                   ))}
                 </ul>
-                <a href="https://sellmyhousepro-app.netlify.app/" target="_blank" rel="noopener noreferrer"
+                <a href={APP_URL} target="_blank" rel="noopener noreferrer"
                   className="block w-full py-3 text-sm font-semibold text-center transition-opacity hover:opacity-85"
                   style={{ background: th.olive, color: th.cream }}>
                   Start free trial
@@ -704,11 +654,18 @@ export default function App() {
               ))}
             </div>
 
-            {/* Waitlist */}
+            {/* App CTA */}
             <div>
               <p className="text-xs uppercase tracking-widest font-semibold mb-4"
-                style={{ color: th.terracotta }}>Join the waitlist</p>
-              <FooterWaitlist />
+                style={{ color: th.terracotta }}>Get started</p>
+              <p className="text-sm mb-5" style={{ color: 'rgba(247,242,234,0.5)' }}>
+                The app is live. Start your free trial today — no credit card required.
+              </p>
+              <a href={APP_URL} target="_blank" rel="noopener noreferrer"
+                className="inline-block px-6 py-3 text-sm font-semibold transition-opacity hover:opacity-85"
+                style={{ background: th.terracotta, color: th.cream }}>
+                Start free trial
+              </a>
             </div>
           </div>
 
@@ -721,7 +678,7 @@ export default function App() {
   );
 }
 
-// ── Feature Card (extracted so it can be used in both desktop cascade + mobile grid)
+// ── Feature Card ──────────────────────────────────────────────────────────────
 function FeatureCard({ Icon, title, desc }: {
   Icon: React.ElementType;
   title: string;
@@ -757,64 +714,6 @@ function FeatureCard({ Icon, title, desc }: {
         <p className="font-semibold text-sm mb-1" style={{ color: '#2A2018' }}>{title}</p>
         <p className="text-xs leading-relaxed" style={{ color: '#7A6E60' }}>{desc}</p>
       </div>
-    </div>
-  );
-}
-
-// ── Footer waitlist sub-component ────────────────────────────────────────────
-function FooterWaitlist() {
-  const [email, setEmail] = useState('');
-  const [state, setState] = useState<'idle'|'loading'|'success'|'duplicate'|'error'>('idle');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
-    setState('loading');
-    const result = await joinWaitlist(email.trim());
-    if (result.alreadyExists) setState('duplicate');
-    else if (result.error)    setState('error');
-    else                      setState('success');
-  };
-
-  if (state === 'success') return (
-    <div className="flex items-center gap-2 text-sm" style={{ color: '#8FBD7A' }}>
-      <CheckCircle className="w-4 h-4 flex-shrink-0" />
-      You're on the list! We'll be in touch soon.
-    </div>
-  );
-
-  if (state === 'duplicate') return (
-    <div className="flex items-center gap-2 text-sm" style={{ color: '#8FBD7A' }}>
-      <CheckCircle className="w-4 h-4 flex-shrink-0" />
-      You're already on the list!
-    </div>
-  );
-
-  return (
-    <div className="space-y-2">
-      <form onSubmit={handleSubmit} className="flex gap-2">
-        <input
-          type="email" required value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder="Your email address"
-          className="flex-1 min-w-0 px-3 py-2.5 text-sm focus:outline-none"
-          style={{
-            background: 'rgba(247,242,234,0.07)',
-            border: '1px solid rgba(247,242,234,0.15)',
-            color: '#F7F2EA',
-          }}
-        />
-        <button type="submit" disabled={state === 'loading'}
-          className="flex-shrink-0 p-2.5 transition-opacity hover:opacity-75 disabled:opacity-40"
-          style={{ background: '#C4614A' }}>
-          <Send className="w-4 h-4" style={{ color: '#F7F2EA' }} />
-        </button>
-      </form>
-      {state === 'error' && (
-        <p className="text-xs" style={{ color: '#C4614A' }}>
-          Something went wrong. Please try again.
-        </p>
-      )}
     </div>
   );
 }
